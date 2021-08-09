@@ -1,48 +1,53 @@
+#!/usr/bin/env node
 'use strict';
 
 require('dotenv').config();
 
+const baseFolder = process.argv[2];
+if (!baseFolder || baseFolder == '') {
+  console.error('Folder required as argument');
+  process.exit(1);
+}
+
 const EventEmitter = require('events');
 const OBSWebSocket = require('obs-websocket-js');
 const irsdk = require('node-irsdk-2021');
-const yargs = require('yargs/yargs');
-const { hideBin } = require('yargs/helpers');
 const path = require('path');
 
 const cams = [9, 2, 11];
 const obsAddress = process.env.OBS_ADDRESS;
 const obsPassword = process.env.OBS_PASSWORD;
 
-const argv = yargs(hideBin(process.argv))
-  .option('in', {
-    alias: 'i',
-    type: 'number',
-    description: 'Start frame'
-  })
-  .option('out', {
-    alias: 'o',
-    type: 'number',
-    description: 'End frame'
-  })
-  .argv;
+let [startFrame, endFrame] = process.argv[3]?.split('-').map(e => parseInt(e)) || [];
+if (!startFrame) startFrame = 1;
+if (!endFrame) endFrame = undefined;
 
-const startFrame = argv.in || 1;
-const endFrame = argv.out;
-const folder = `${startFrame}-${endFrame}`;
-
+const folder = path.join(baseFolder, `${startFrame}-${endFrame}`);
 console.log(`Start: ${startFrame}. End: ${endFrame}`);
 console.log(`Folder: ${folder}`);
 
 async function connectToOBS() {
-  const obs = new OBSWebSocket();
-  await obs.connect({ address: obsAddress, password: obsPassword });
-  console.log(`We're connected to OBS`);
-  return obs;
+  try {
+    const obs = new OBSWebSocket();
+    await obs.connect({ address: obsAddress, password: obsPassword });
+    console.log(`We're connected to OBS`);
+    return obs;
+  } catch (e) {
+    console.error("Cannot connect to OBS", e);
+    process.exit(1);
+  }
 }
 
 async function run() {
   const eventEmitter = new EventEmitter();
   const obs = await connectToOBS();
+
+  process.on('SIGINT', function() {
+    console.error("Caught interrupt signal");
+
+    if (recording) stopRecording();
+    process.exit(1);
+  });
 
   console.log("Connect to Iracing");
   const iracing = irsdk.init({ telemetryUpdateInterval: 100, sessionInfoUpdateInterval: 100 });
@@ -52,7 +57,7 @@ async function run() {
   var i = 0;
 
   console.log("Set recording folder");
-  await obs.send('SetRecordingFolder', { 'rec-folder': path.join(__dirname, 'out', folder) });
+  await obs.send('SetRecordingFolder', { 'rec-folder': path.join(__dirname, folder) });
   console.log("Recording folder set");
 
   obs.on('RecordingStarted', () => {
@@ -88,15 +93,18 @@ async function run() {
     })
   });
 
-  function restart() {
-    console.log('Restart');
-    i += 1;
-
+  function stopRecording() {
     obs.send('StopRecording')
       .catch((error) => {
         console.error("Can't stop recording:", error);
         process.exit(-1);
       });
+  }
+
+  function restart() {
+    console.log('Restart');
+    i += 1;
+    stopRecording();
   }
 
   const delay = ms => new Promise(resolve => setTimeout(resolve, ms));

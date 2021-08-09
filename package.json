@@ -9,7 +9,6 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "node-irsdk-2021": "^0.0.1",
-    "obs-websocket-js": "^4.0.2",
-    "yargs": "^17.1.0"
+    "obs-websocket-js": "^4.0.2"
   }
 }
