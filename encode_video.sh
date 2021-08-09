@@ -52,6 +52,13 @@ for folder in $output_folder/*/; do
   ((i++))
 done
 
-cmd="ffmpeg -y $(build_sources) -filter_complex '$(build_filters)' -map '[$video_label]' -map '[$audio_label]' $(cat ffmpeg_options) $output_folder/output.mp4"
+video_map="[$video_label]"
+if [ "$audio_label" != "0:a" ]; then
+  audio_map="[$audio_label]"
+else
+  audio_map="0:a"
+fi
+
+cmd="ffmpeg -y $(build_sources) -filter_complex '$(build_filters)' -map $video_map -map $audio_map $(cat ffmpeg_options) $output_folder/output.mp4"
 echo $cmd
 eval "$cmd"

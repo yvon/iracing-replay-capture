@@ -14,7 +14,7 @@ const OBSWebSocket = require('obs-websocket-js');
 const irsdk = require('node-irsdk-2021');
 const path = require('path');
 
-const cams = [9, 2, 11];
+const cams = process.argv[4] ? process.argv[4].split(',').map(e => parseInt(e)) : [9, 2, 11];
 const obsAddress = process.env.OBS_ADDRESS;
 const obsPassword = process.env.OBS_PASSWORD;
 
