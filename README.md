@@ -24,7 +24,7 @@ Usage:
   replay-capture [options] play <cameras>... record
 
 Arguments:
-  <cameras>  Cameras to play sequencially. Ie: cockpit tv1
+  <cameras>  Cameras to play sequentially. Ie: cockpit tv1
 
 Options:
   -o, --output <output>          Output folder
