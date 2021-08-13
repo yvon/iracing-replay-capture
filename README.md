@@ -62,7 +62,7 @@ Example:
 
 ```
 replay-capture.exe play cockpit --ranges 1042-1200 # start with a cockpit view
-replay-capture.exe play tv1 --ranges 1100-1200 # something jump appened, replay it from tv1 perspective
+replay-capture.exe play tv1 --ranges 1100-1200 # something just appened, replay it from tv1 perspective
 replay-capture-exe play cockpit --ranges 1200- # then return to cockpit view, etc...
 ```
 
