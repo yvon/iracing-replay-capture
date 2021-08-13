@@ -54,7 +54,7 @@ An OBS record will be automatically started for each camera. If you specify the 
 
 Also, if a scene of the camera name exists, it will automatically switch to it.
 
-## Another use case
+## Another use cases
 
 Writing you own script you may control the cameras to capture a complex sequence, including jumps in time, replays, etc...
 
@@ -65,3 +65,7 @@ replay-capture.exe play cockpit --ranges 1042-1200 # start with a cockpit view
 replay-capture.exe play tv1 --ranges 1100-1200 # something jump appened, replay it from tv1 perspective
 replay-capture-exe play cockpit --ranges 1200- # then return to cockpit view, etc...
 ```
+
+Another option will be to automatically mount the videos using FFMPEG. As an example here is a bash script I used to create a cockpit view with mirrror and tv embeded, and with blur transition between sequences : https://gist.github.com/yvon/4325bc6a447abb958dba19bdf2e22a23
+
+And here is the kind of output it produces: https://youtu.be/Yf2NQ8Awasg
