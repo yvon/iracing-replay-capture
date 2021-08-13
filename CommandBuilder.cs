@@ -80,9 +80,9 @@ namespace IracingReplayCapture
             return rootCommand;
         }
 
-        static public void InvokeRootCommand(string[] args)
+        static public int InvokeRootCommand(string[] args)
         {
-            RootCommand().InvokeAsync(args);
+            return RootCommand().InvokeAsync(args).Result;
         }
     }
 }
