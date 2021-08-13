@@ -25,7 +25,7 @@ Cf [this message on iRacing forums](https://forums.iracing.com/discussion/commen
 ```
 replay-capture.exe -h
 replay-capture.exe play -h
-replay-capture.exe record -h
+replay-capture.exe play record -h
 ```
 
 ## Typical use case
@@ -39,7 +39,7 @@ replay-capture.exe play cockpit tv1 gearbox record -o output_folder
 By default, the application will play the whole replay but you can restrain it a range of frames using the `--ranges` option.
 
 ```
-replay-capture.exe play --ranges 1042-10453 --ranges 44970-47000 cockpit tv1 gearbox record -o output_folder
+replay-capture.exe play cockpit tv1 gearbox --ranges 1042-10453 44970-47000 record -o output_folder
 ```
 
 If you specify more than one range it will play the given cameras sequentially for the first one, then do the same for the second, etc...
@@ -61,7 +61,7 @@ Writing you own script you may control the cameras to capture a complex sequence
 Example:
 
 ```
-replay-capture.exe play --ranges 1042-1200 cockpit # start with a cockpit view
-replay-capture.exe play --ranges 1100-1200 tv1 # something jump appened, replay it from tv1 perspective
-replay-capture-exe play --ranges 1200- cockpit # then return to cockpit view, etc...
+replay-capture.exe play cockpit --ranges 1042-1200 # start with a cockpit view
+replay-capture.exe play tv1 --ranges 1100-1200 # something jump appened, replay it from tv1 perspective
+replay-capture-exe play cockpit --ranges 1200- # then return to cockpit view, etc...
 ```
