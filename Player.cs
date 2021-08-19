@@ -16,6 +16,8 @@ namespace IracingReplayCapture
         SessionInfo _sessionInfo;
         Dictionary<string, int> _camera_ids;
 
+        public SdkWrapper Sdk { get => _sdk; }
+
         public class NewFrameRangeArgs : EventArgs
         {
             public FrameRange FrameRange;
@@ -41,11 +43,6 @@ namespace IracingReplayCapture
         public event EventHandler<NewFrameRangeArgs> NewFrameRange;
         public event EventHandler<NewCameraArgs> NewCamera;
 
-        static public void Play(string[] cameras, FrameRange[] ranges)
-        {
-            new Player(cameras, ranges).Play();
-        }
-
         public Player(string[] cameras, FrameRange[] frameRanges)
         {
             _cameras = cameras;
@@ -64,7 +61,6 @@ namespace IracingReplayCapture
         {
             ConnectToIracing();
             GetCameraIds();
-            HideInterface();
 
             Console.CancelKeyPress += OnExit;
             AppDomain.CurrentDomain.ProcessExit += OnExit;
@@ -162,11 +158,6 @@ namespace IracingReplayCapture
                     _camera_ids.Add(CleanWhitespaces(name.ToLower()), i);
                 }
             }
-        }
-        private void HideInterface()
-        {
-            Console.WriteLine("Hiding interface");
-            _sdk.Camera.SetCameraState(new CameraState((int)CameraStates.UIHidden));
         }
 
         private void ConnectToIracing()

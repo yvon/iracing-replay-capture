@@ -38,6 +38,12 @@ namespace IracingReplayCapture
                     description: "Frames to play. By default it goes through the whole replay. Format: START[-END]",
                     parseArgument: ArgumentParser.parseFrameRange),
 
+                new Option<uint>("--ui-delay",
+                    description: "Don't hide the interface immediatly but wait for X milliseconds after each camera change",
+                    getDefaultValue: () => 0) {
+                    Arity = ArgumentArity.ZeroOrOne
+                },
+
                 new Argument<string[]>("cameras",
                     description: "Cameras to play sequentially. Ie: cockpit tv1") {
                     Arity = ArgumentArity.OneOrMore
@@ -46,7 +52,13 @@ namespace IracingReplayCapture
                 RecordCommand()
             };
 
-            command.Handler = CommandHandler.Create<string[], FrameRange[]>(Player.Play);
+            command.Handler = CommandHandler.Create((string[] cameras, FrameRange[] ranges, uint uiDelay) =>
+            {
+                var player = new Player(cameras, ranges);
+                var uiController = new UiController(player, uiDelay);
+                player.Play();
+            });
+
             return command;
         }
 

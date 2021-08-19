@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentParser.cs" />
+    <Compile Include="UiController.cs" />
     <Compile Include="CommandBuilder.cs" />
     <Compile Include="Simulator.cs" />
     <Compile Include="ReplayControl.cs" />
